@@ -23,17 +23,18 @@ console.log("ENV CHECK:", {
 
 const allowedOrigins = [
     'http://localhost:5173',
-    process.env.FRONTEND_URL // Allow Vercel URL from env
-].filter(Boolean);
+    process.env.FRONTEND_URL 
+].filter(Boolean).map(url => url.replace(/\/$/, "")); // Remove trailing slashes
 
 // Middleware
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
     origin: (origin, callback) => {
-        // Allow requests with no origin (like mobile apps or curl)
-        if (!origin) return callback(null, true);
-        if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'development') {
+        if (!origin || process.env.NODE_ENV === 'development') return callback(null, true);
+        
+        const cleanOrigin = origin.replace(/\/$/, "");
+        if (allowedOrigins.includes(cleanOrigin) || cleanOrigin.endsWith(".vercel.app")) {
             callback(null, true);
         } else {
             callback(new Error('Not allowed by CORS'));
