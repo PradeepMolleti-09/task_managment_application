@@ -53,5 +53,22 @@ The application follows a clean, modular architecture:
    ```
 4. Start the application: `npm run dev`.
 
+## 🌐 Deployment
+This project is configured for easy deployment on **Render** (Backend) and **Vercel** (Frontend).
+
+### Backend (Render)
+- **Environment**: Node.js
+- **Build Command**: `npm install`
+- **Start Command**: `npm start`
+- **Required Env**: `MONGO_URI`, `JWT_SECRET`, `ENCRYPTION_KEY`, `EMAIL_USER`, `EMAIL_PASS`, `FRONTEND_URL`.
+
+### Frontend (Vercel)
+- **Framework**: Vite
+- **Build Command**: `npm run build`
+- **Output Directory**: `dist`
+- **Required Env**: `VITE_BACKEND_URL`.
+
+For a step-by-step walkthrough, see our [Deployment Guide](./deployment_guide.md).
+
 ## 📜 API Documentation
 Refer to [API_DOCS.md](./API_DOCS.md) for detailed endpoint documentation.
