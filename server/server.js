@@ -23,24 +23,29 @@ console.log("ENV CHECK:", {
 
 const allowedOrigins = [
     'http://localhost:5173',
+    'https://localhost:5173',
     process.env.FRONTEND_URL 
-].filter(Boolean).map(url => url.replace(/\/$/, "")); // Remove trailing slashes
+].filter(Boolean).map(url => url.replace(/\/$/, ""));
 
 // Middleware
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
     origin: (origin, callback) => {
-        if (!origin || process.env.NODE_ENV === 'development') return callback(null, true);
+        // In local development, allow everything
+        if (!origin || process.env.NODE_ENV !== 'production') return callback(null, true);
         
         const cleanOrigin = origin.replace(/\/$/, "");
         if (allowedOrigins.includes(cleanOrigin) || cleanOrigin.endsWith(".vercel.app")) {
             callback(null, true);
         } else {
+            console.log("Blocked by CORS:", origin);
             callback(new Error('Not allowed by CORS'));
         }
     },
-    credentials: true
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie']
 }));
 
 // Routes

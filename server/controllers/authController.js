@@ -202,12 +202,18 @@ export const verifyEmail = async (req, res) => {
 /* ================= AUTH CHECK ================= */
 export const isAuthenticated = async (req, res) => {
     try {
-        const user = await User.findById(req.userId).select('-password');
-        if (!user) return res.status(401).json({ success: false, message: 'User not found' });
+        const { token } = req.cookies;
+        if (!token) return res.json({ success: false, message: 'Not logged in' });
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        if (!decoded?.id) return res.json({ success: false, message: 'Invalid session' });
+
+        const user = await User.findById(decoded.id).select('-password');
+        if (!user) return res.json({ success: false, message: 'User not found' });
 
         res.status(200).json({ success: true, user });
     } catch (error) {
-        res.status(500).json({ success: false, message: 'Authentication failed' });
+        res.json({ success: false, message: 'Session expired' });
     }
 };
 

@@ -10,7 +10,7 @@ router.post('/login', login); // router to handle user login
 router.post('/logout', logout); // router to handle user logout
 router.post('/sendVerifyOTP', userAuth, sendVerifyOTP); // router to send verification OTP
 router.post('/verifyEmail', userAuth, verifyEmail); // router to verify email with OTP
-router.get('/isAuth', userAuth, isAuthenticated); // router to check if user is authenticated
+router.get('/isAuth', isAuthenticated); // Internal check
 router.post('/sendRestPasswordOTP', sendRestPasswordOTP); // router to send reset password OTP
 router.post('/resetPassword', resetPassword); // router to reset password
 
